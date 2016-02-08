@@ -134,7 +134,7 @@ public class GriffinLibCacheUtil {
     /* Compare the global and local repository to identify all the files requiring download  */
     public Map<String, FileInfo> findFilesToDownload() {
 
-        Map<String, FileInfo> filesToDownload = new HashMap<String, FileInfo>();
+        Map<String, FileInfo> filesToDownload = new HashMap<>();
 
         Map<String, FileInfo> localFiles = getLatestLocalFileInfo().get();
         Map<String, FileInfo> globalFiles = getLatestGlobalFileInfo().get();
@@ -244,15 +244,12 @@ public class GriffinLibCacheUtil {
         /* If a more latest version is present in the global repository we will true. If we don't have any info
             about the file we will assume the fileInfo version is the latest
          */
-        if  (globalFileInfo.isPresent() && globalFileInfo.get().getVersion() > fileInfo.getVersion()) {
-            return false;
-        }
-        return true;
+        return !(globalFileInfo.isPresent() && globalFileInfo.get().getVersion() > fileInfo.getVersion());
     }
 
     public Optional<Map<String, FileInfo>> getLatestLocalFileInfo() {
 
-        Map<String, FileInfo> latestObjInfo = new ConcurrentHashMap<String, FileInfo>();
+        Map<String, FileInfo> latestObjInfo = new ConcurrentHashMap<>();
 
         for(File file : getLocalFileList()) {
 
@@ -323,7 +320,7 @@ public class GriffinLibCacheUtil {
 
         String dir = getTempCacheDirectory(fileInfo);
         File metaDataFile = new File(getMetadataFilePath(dir));
-        List<String> metaData = new ArrayList<String>(Arrays.asList(fileInfo.getHash(),
+        List<String> metaData = new ArrayList<>(Arrays.asList(fileInfo.getHash(),
                 fileInfo.getDest(), fileInfo.getCompression()));
         FileUtils.writeLines(metaDataFile, DEFAULT_FILE_ENCODING, metaData);
     }
@@ -387,14 +384,14 @@ public class GriffinLibCacheUtil {
 
     public Map<String, String> getLocalFileLatestVersion() {
 
-        Map<String, String> filenameAndVersion = new ArrayMap<String, String>();
+        Map<String, String> filenameAndVersion = new ArrayMap<>();
 
         Map<String, File> localFileMap = getLocalFileMap();
         for (Map.Entry<String, File> entry : localFileMap.entrySet()) {
 
             List<File> fileVersions = Arrays.asList(entry.getValue().listFiles((FileFilter) DirectoryFileFilter.DIRECTORY));
 
-            List<String> versions = new ArrayList<String>(Collections2.transform(fileVersions,
+            List<String> versions = new ArrayList<>(Collections2.transform(fileVersions,
                     new Function<File, String>() {
                         @Override
                         public String apply(File file) {
@@ -437,7 +434,7 @@ public class GriffinLibCacheUtil {
                     /* Store file for forensics */
                     String tempDir = FilenameUtils.concat(getTempCacheDirectory(), fileInfo.getFilename());
                     FileUtils.copyDirectoryToDirectory(new File(tempDir), new File(getForensicCacheDirectory()));
-                } catch (Exception e) {
+                } catch (IOException e) {
                     // Ignore
                 }
             }

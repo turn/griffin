@@ -100,7 +100,7 @@ public class GriffinConsumer {
 
         logger.debug(String.format("Consuming topic:%s with %s streams", this.topicRegEx, streams.size()));
         for (KafkaStream<byte[], byte[]> stream : streams) {
-            kafkaStreamsExecutor.submit(new KafkaConsumer<byte[], byte[]>(stream, this.msgQueue));
+            kafkaStreamsExecutor.submit(new KafkaConsumer<>(stream, this.msgQueue));
         }
     }
 

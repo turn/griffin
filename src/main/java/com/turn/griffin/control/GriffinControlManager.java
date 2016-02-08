@@ -74,7 +74,7 @@ public class GriffinControlManager implements Runnable {
 
         /* Start the consumer before the producer to trigger topic creation */
         /* Start control channel consumer */
-        this.incomingCntrlMsgQueue = new ArrayBlockingQueue<byte[]>(CONTROL_TOPIC_CONSUMER_QUEUE_SIZE);
+        this.incomingCntrlMsgQueue = new ArrayBlockingQueue<>(CONTROL_TOPIC_CONSUMER_QUEUE_SIZE);
 
 
         /* The groupId should be unique to avoid conflict with other consumers running on this machine */

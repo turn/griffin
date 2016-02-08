@@ -96,7 +96,7 @@ public class GriffinResourceDiscoveryTask implements Runnable {
                             .parseFrom(cntlMessage.getPayload().toByteArray());
 
 
-                    Map<String, FileInfo> recvLatestFileInfo = new HashMap<String, FileInfo>();
+                    Map<String, FileInfo> recvLatestFileInfo = new HashMap<>();
                     for (FileInfo f : recvFileInfo.getLatestFilesList()) {
                         recvLatestFileInfo.put(f.getFilename(), f);
                         logger.debug(String.format("\t%s",

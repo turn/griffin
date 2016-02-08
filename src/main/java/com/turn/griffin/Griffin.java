@@ -14,5 +14,5 @@ public interface Griffin {
      * @param filepath  Full filename of the file containing the blob
      * @return boolean  true if the file syncing was initiated; false otherwise
      */
-    public boolean syncBlob(String blobName, String dest, String filepath);
+    boolean syncBlob(String blobName, String dest, String filepath);
 }

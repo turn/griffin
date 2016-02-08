@@ -23,6 +23,8 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.BitSet;
 import java.util.Properties;
@@ -74,7 +76,7 @@ public class GriffinUploadTask implements Runnable {
         Optional<GriffinConsumer> consumer = Optional.absent();
         BitSet availableBlockBitmap = new BitSet((int) blockCount);
         try {
-            BlockingQueue<byte[]> dataQueue = new ArrayBlockingQueue<byte[]>(GriffinDownloadTask.DOWNLOAD_CONSUMER_QUEUE_SIZE);
+            BlockingQueue<byte[]> dataQueue = new ArrayBlockingQueue<>(GriffinDownloadTask.DOWNLOAD_CONSUMER_QUEUE_SIZE);
             Properties properties = new Properties();
             properties.put("auto.offset.reset", "smallest");
 
@@ -180,7 +182,7 @@ public class GriffinUploadTask implements Runnable {
             logger.info(String.format("Ending file upload for file %s version %s to %s",
                     filename, fileVersion, dataTopicNameForProducer));
             libCacheUploadFile.close();
-        } catch (Exception e) {
+        } catch (IOException | RuntimeException e) {
             logger.error(String.format("Unable to upload file %s to %s", filename, dataTopicNameForProducer), e);
             String subject = String.format("WARNING: GriffinUploadTask failed for blob:%s", filename);
             String body = String.format("Action: GriffinUploadTask failed for blob:%s version:%s%n" +

@@ -12,7 +12,6 @@ import com.google.common.collect.Collections2;
 import com.turn.griffin.GriffinControl.FileInfo;
 import com.turn.griffin.GriffinLibCacheUtil;
 import com.turn.griffin.GriffinModule;
-import com.turn.griffin.utils.GriffinConfig;
 import com.turn.griffin.utils.GriffinKafkaTopicNameUtil;
 import kafka.admin.AdminUtils;
 import kafka.utils.ZkUtils;
@@ -46,7 +45,7 @@ public class GriffinDownloadManager implements Runnable {
     private final int deleteTopicsEveryNRuns;
 
 
-    protected static final Map<String, ScheduledFuture<?>> ONGOING_DOWNLOADS = new ConcurrentHashMap<String, ScheduledFuture<?>>();
+    protected static final Map<String, ScheduledFuture<?>> ONGOING_DOWNLOADS = new ConcurrentHashMap<>();
     private GriffinDataManager dataManager;
 
     public GriffinDownloadManager(GriffinDataManager dataManager) {
@@ -79,7 +78,7 @@ public class GriffinDownloadManager implements Runnable {
             deleteExpiredVersions(deleteExpiredKafkaTopics);
 
             Map<String, FileInfo> filesToDownload = dataManager.getLibCacheManager().get().findFilesToDownload();
-            logger.debug("Files to download " + filesToDownload.keySet().toString());
+            logger.debug("Files to download " + filesToDownload.keySet());
             for (Map.Entry<String, FileInfo> entry : filesToDownload.entrySet()) {
                 String filename = entry.getKey();
                 FileInfo fileInfo = entry.getValue();

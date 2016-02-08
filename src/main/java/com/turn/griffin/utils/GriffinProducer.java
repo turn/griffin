@@ -42,28 +42,28 @@ public class GriffinProducer {
         props.put("request.required.acks", "1");
         props.put("retry.backoff.ms", "3000");
 
-        this.producer = new Producer<byte[], byte[]>(new ProducerConfig(props));
+        this.producer = new Producer<>(new ProducerConfig(props));
     }
 
     public void send(String topic, Message message) {
         /* Give a random key to spread the messages across all partitions */
         /* This makes it thread-unsafe but that's OK since we just need some random value in this.key */
         RANDOM_KEY.nextBytes(this.key);
-        this.producer.send(new KeyedMessage<byte[], byte[]>(topic, this.key.clone(), message.toByteArray()));
+        this.producer.send(new KeyedMessage<>(topic, this.key.clone(), message.toByteArray()));
     }
 
     public void send(String topic, String key, Message message) {
-        this.producer.send(new KeyedMessage<byte[], byte[]>(topic,
+        this.producer.send(new KeyedMessage<>(topic,
                 key.getBytes(Charsets.UTF_8), message.toByteArray()));
     }
 
     public void send(String topic, List<Message> messages) {
-        List<KeyedMessage<byte[], byte[]>> kMessages = new ArrayList<KeyedMessage<byte[], byte[]>>(messages.size());
+        List<KeyedMessage<byte[], byte[]>> kMessages = new ArrayList<>(messages.size());
         for (Message message : messages) {
             /* Give a random key to spread the messages across all partitions */
             /* This makes it thread-unsafe but that's OK since we just need some random value in this.key */
             RANDOM_KEY.nextBytes(this.key);
-            kMessages.add(new KeyedMessage<byte[], byte[]>(topic, this.key.clone(), message.toByteArray()));
+            kMessages.add(new KeyedMessage<>(topic, this.key.clone(), message.toByteArray()));
         }
         this.producer.send(kMessages);
     }

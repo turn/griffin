@@ -9,7 +9,6 @@ apply plugin: 'docker'
 apply plugin: 'findbugs'
 
 sourceCompatibility = 1.7
-targetCompatibility = 1.7
 group = "srangwal"
 
 
@@ -71,7 +70,43 @@ configurations.all {
   exclude module: 'slf4j-log4j12'
 }
 
+def generateProtoBufDir = "$projectDir/src/generated"
+protobuf {
+  /* Location for protobuf generated files */
+  generatedFilesBaseDir = generateProtoBufDir
+}
+
+clean {
+  /* Clean generated files as well */
+  delete generateProtoBufDir
+}
+
+idea {
+  project {
+    jdkName = '1.7'
+    languageLevel = '1.7'
+    vcs = 'Git'
+  }
+  module {
+    /* Add protobuf generated files to sources for idea file */
+    sourceDirs += file(generateProtoBufDir)
+  }
+}
+
+javadoc {
+  dependsOn tasks.build
+
+  options.memberLevel = JavadocMemberLevel.PACKAGE
+  options.noQualifiers = ["all"]
+
+  /* Add protobuf generated files to sources for javadoc */
+  source = [sourceSets.main.allJava, files(generateProtoBufDir)]
+  classpath = configurations.compile
+}
+
+
 task buildDocker(type: Docker, dependsOn: build) {
+  description 'Build a Griffin docker image'
   push = false
   applicationName = jar.baseName
   dockerfile = file('src/main/docker/Dockerfile')
@@ -92,7 +127,6 @@ findbugs {
 }
 
 tasks.withType(FindBugs) {
-
   // TODO: Make sure this is not excluding GriffinControlManager
   def excludeGriffinControl = 'com/turn/griffin/GriffinControl$'
   def excludeGriffinData = 'com/turn/griffin/GriffinData$'

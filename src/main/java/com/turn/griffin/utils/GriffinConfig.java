@@ -29,8 +29,8 @@ public class GriffinConfig {
 
     private static void init() {
         properties = new Properties();
-        try {
-            properties.load(new FileInputStream(configFile));
+        try (FileInputStream fis = new FileInputStream(configFile)) {
+            properties.load(fis);
         } catch (IOException e) {
             Preconditions.checkState(false, e.getMessage());
         }

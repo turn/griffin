@@ -112,7 +112,7 @@ public class GriffinDownloadTask implements Runnable {
         try {
             tempCacheCompressedFile = Optional.fromNullable(new RandomAccessFile(tempCacheCompressedFilePath, "rw"));
 
-            BlockingQueue<byte[]> dataQueue = new ArrayBlockingQueue<byte[]>(DOWNLOAD_CONSUMER_QUEUE_SIZE);
+            BlockingQueue<byte[]> dataQueue = new ArrayBlockingQueue<>(DOWNLOAD_CONSUMER_QUEUE_SIZE);
             consumer = createConsumer(filename, fileVersion, dataQueue);
             /* Current kafka version throws IndexOutOfBoundsException for some topics. Give kafka some time to create
                a new topic and propagate the information to all the brokers */
@@ -197,8 +197,7 @@ public class GriffinDownloadTask implements Runnable {
             String body = String.format("Action: GriffinDownloadTask failed for blob:%s version:%s%n" +
                             "Reason: Unable to connect to Zookeeper%n %s", filename, fileVersion,
                     Throwables.getStackTraceAsString(zkte));
-            // Suppress this alert for now
-            //GriffinModule.emailAlert(subject, body);
+            GriffinModule.emailAlert(subject, body);
 
         } catch (Exception e) {
             logger.warn(String.format("Unable to download %s %s", filename, fileVersion), e);

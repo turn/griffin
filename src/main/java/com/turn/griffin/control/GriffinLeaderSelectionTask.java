@@ -38,9 +38,9 @@ public class GriffinLeaderSelectionTask implements  Runnable {
      */
     private static final int MSG_PROPAGATION_DELAY_MS = LEADER_SELECTION_PERIOD_MS / 4; // in ms
 
-    private static final Map<String, ScheduledFuture<?>> FOLLOWER = new ConcurrentHashMap<String, ScheduledFuture<?>>();
-    private static final Map<String, ScheduledFuture<?>> CANDIDATE = new ConcurrentHashMap<String, ScheduledFuture<?>>();
-    private static final Map<String, ScheduledFuture<?>> LEADER = new ConcurrentHashMap<String, ScheduledFuture<?>>();
+    private static final Map<String, ScheduledFuture<?>> FOLLOWER = new ConcurrentHashMap<>();
+    private static final Map<String, ScheduledFuture<?>> CANDIDATE = new ConcurrentHashMap<>();
+    private static final Map<String, ScheduledFuture<?>> LEADER = new ConcurrentHashMap<>();
 
     private GriffinControlManager controlManager;
     private Action action;
